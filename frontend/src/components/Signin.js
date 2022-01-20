@@ -14,11 +14,11 @@ const Signin = (props) => {
         body
       );
       localStorage.setItem("user", JSON.stringify(res.data));
-      // if (res.data.roles.includes("ROLE_ADMIN")) {
-      //   history.push("/admin");
-      // } else {
-      history.push("/profile");
-      // }
+      if (res.data.roles.includes("ROLE_ADMIN")) {
+        history.push("/admin");
+      } else {
+        history.push("/profile");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -56,10 +56,6 @@ const Signin = (props) => {
           />
         </Form.Item>
         <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
           <a className="login-form-forgot" href="">
             Forgot password
           </a>

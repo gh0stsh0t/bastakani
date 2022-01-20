@@ -28,12 +28,54 @@ const AdminUsers = () => {
       console.log(err);
     }
   };
+  const approveUsers = async () => {
+    try {
+      let res = await axios.post(
+        (process.env.REACT_APP_BASE_URL || "") + "/api/users/approve",
+        { id: selectedRowKeys },
+        config()
+      );
+      await retrieveUsers();
+    } catch (err) {
+      if (err.response.status === 401) {
+        history.push("/");
+      }
+      console.log(err);
+    }
+  };
+  const denyUsers = async () => {
+    try {
+      let res = await axios.post(
+        (process.env.REACT_APP_BASE_URL || "") + "/api/users/decline",
+        { id: selectedRowKeys },
+        config()
+      );
+      await retrieveUsers();
+    } catch (err) {
+      if (err.response.status === 401) {
+        history.push("/");
+      }
+      console.log(err);
+    }
+  };
 
   const columns = [
     {
       title: "email",
       dataIndex: "email",
       render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "First Name",
+      dataIndex: "firstName",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "lastName",
+    },
+    {
+      title: "Contact Number",
+      dataIndex: "contactNumber",
     },
     {
       title: "Created At",
@@ -58,10 +100,10 @@ const AdminUsers = () => {
         </Col>
         <Col style={{ flex: 1 }} />
         <Col>
-          <Button type="primary" onClick={() => {}} disabled={!hasSelected}>
+          <Button type="primary" onClick={approveUsers} disabled={!hasSelected}>
             Approve
           </Button>{" "}
-          <Button type="danger" onClick={() => {}} disabled={!hasSelected}>
+          <Button type="danger" onClick={denyUsers} disabled={!hasSelected}>
             Decline
           </Button>
         </Col>
@@ -71,12 +113,9 @@ const AdminUsers = () => {
           type: "checkbox",
           selectedRowKeys,
           onChange: setSelectedRowKeys,
-          getCheckboxProps: (record) => ({
-            name: record.name,
-          }),
         }}
         columns={columns}
-        dataSource={users}
+        dataSource={users.map((item) => ({ ...item, key: item.id }))}
       />
     </>
   );

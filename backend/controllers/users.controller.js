@@ -53,7 +53,14 @@ exports.approveAll = async (req, res, next) => {
 
 exports.findAll = (req, res) => {
   User.findAll({
-    attributes: ["id", "email", "createdAt"],
+    attributes: [
+      "id",
+      "email",
+      "createdAt",
+      "firstName",
+      "lastName",
+      "contactNumber",
+    ],
     where: { active: false },
     include: [
       {
@@ -70,8 +77,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving applications.",
+        message: err.message || "Some error occurred while retrieving users.",
       });
     });
 };
