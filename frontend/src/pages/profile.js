@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "antd";
-import { UserProfile } from "../components";
+import { UserProfile, UserApplication } from "../components";
 const { TabPane } = Tabs;
 
 const Profile = () => {
@@ -10,7 +10,9 @@ const Profile = () => {
         <TabPane tab="Edit User Details" key="1">
           <UserProfile />
         </TabPane>
-        <TabPane tab="Apply" key="2"></TabPane>
+        <TabPane tab="Apply" key="2">
+          <UserApplication />
+        </TabPane>
       </Tabs>
     </div>
   );

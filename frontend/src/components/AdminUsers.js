@@ -87,11 +87,7 @@ const AdminUsers = () => {
     <>
       <Row style={{ marginBottom: 16 }}>
         <Col>
-          <Button
-            type="primary"
-            onClick={retrieveUsers}
-            disabled={!hasSelected}
-          >
+          <Button type="primary" onClick={retrieveUsers}>
             Reload
           </Button>
           <span style={{ marginLeft: 8 }}>

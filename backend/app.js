@@ -21,8 +21,6 @@ if (process.env.NODE_ENV !== "production") {
 app.use(cors(corsOptions));
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -30,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 const db = require("./models");
+
 function initial() {
   db.role.create({
     id: 1,
@@ -56,11 +55,13 @@ function initial() {
 db.sequelize.sync({ force: true }).then(() => {
   initial();
 });
+
 if (process.env.NODE_ENV === "production") {
   app.get("/*", function (req, res) {
     res.sendFile(path + "index.html");
   });
 }
+
 app.use("/api/users", usersRouter);
 app.use("/api/applications", applicationsRouter);
 app.use("/api/auth", authRouter);

@@ -21,6 +21,9 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId",
 });
 
+db.user.hasMany(db.applications, { foreignKey: "userId" });
+db.applications.belongsTo(db.user);
+
 db.ROLES = ["user", "admin"];
 
 module.exports = db;

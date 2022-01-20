@@ -33,7 +33,7 @@ exports.approveAll = async (req, res, next) => {
         where: { id },
       }
     );
-    if (num == 1) {
+    if (num >= 1) {
       res.send({
         message: "User was updated successfully.",
       });

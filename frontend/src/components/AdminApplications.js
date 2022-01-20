@@ -12,10 +12,10 @@ const AdminApplications = () => {
   const history = useHistory();
 
   useEffect(() => {
-    retrieveUsers();
+    retrieveApplications();
   }, []);
 
-  const retrieveUsers = async () => {
+  const retrieveApplications = async () => {
     try {
       let res = await axios.get(
         (process.env.REACT_APP_BASE_URL || "") + "/api/applications",
@@ -29,45 +29,77 @@ const AdminApplications = () => {
       console.log(err);
     }
   };
+
+  const approveApplications = async () => {
+    try {
+      let res = await axios.post(
+        (process.env.REACT_APP_BASE_URL || "") + "/api/applications/approve",
+        { id: selectedRowKeys },
+        config()
+      );
+      await retrieveApplications();
+    } catch (err) {
+      if (err.response.status === 401) {
+        history.push("/");
+      }
+      console.log(err);
+    }
+  };
+  const denyApplications = async () => {
+    try {
+      let res = await axios.post(
+        (process.env.REACT_APP_BASE_URL || "") + "/api/applications/decline",
+        { id: selectedRowKeys },
+        config()
+      );
+      await retrieveApplications();
+    } catch (err) {
+      if (err.response.status === 401) {
+        history.push("/");
+      }
+      console.log(err);
+    }
+  };
   const columns = [
     {
-      title: "Name",
+      title: "name",
       dataIndex: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-    },
-    {
-      title: "Address",
+      title: "address",
       dataIndex: "address",
     },
-  ];
-  const data = [
     {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
+      title: "contactNumber",
+      dataIndex: "contactNumber",
     },
     {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
+      title: "email",
+      dataIndex: "email",
     },
     {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
+      title: "nationality",
+      dataIndex: "nationality",
     },
     {
-      key: "4",
-      name: "Disabled User",
-      age: 99,
-      address: "Sidney No. 1 Lake Park",
+      title: "sex",
+      dataIndex: "sex",
+    },
+    {
+      title: "birthdate",
+      dataIndex: "birthdate",
+    },
+    {
+      title: "height",
+      dataIndex: "height",
+    },
+    {
+      title: "weight",
+      dataIndex: "weight",
+    },
+    {
+      title: "createdAt",
+      dataIndex: "createdAt",
     },
   ];
 
@@ -75,7 +107,7 @@ const AdminApplications = () => {
     <>
       <Row style={{ marginBottom: 16 }}>
         <Col>
-          <Button type="primary" onClick={() => {}} disabled={!hasSelected}>
+          <Button type="primary" onClick={retrieveApplications}>
             Reload
           </Button>
           <span style={{ marginLeft: 8 }}>
@@ -84,10 +116,18 @@ const AdminApplications = () => {
         </Col>
         <Col style={{ flex: 1 }} />
         <Col>
-          <Button type="primary" onClick={() => {}} disabled={!hasSelected}>
+          <Button
+            type="primary"
+            onClick={approveApplications}
+            disabled={!hasSelected}
+          >
             Approve
           </Button>{" "}
-          <Button type="danger" onClick={() => {}} disabled={!hasSelected}>
+          <Button
+            type="danger"
+            onClick={denyApplications}
+            disabled={!hasSelected}
+          >
             Decline
           </Button>
         </Col>
@@ -96,20 +136,10 @@ const AdminApplications = () => {
         rowSelection={{
           type: "checkbox",
           selectedRowKeys,
-          onChange: (selectedRowKeys, selectedRows) => {
-            console.log(
-              `selectedRowKeys: ${selectedRowKeys}`,
-              "selectedRows: ",
-              selectedRows
-            );
-            setSelectedRowKeys(selectedRowKeys);
-          },
-          getCheckboxProps: (record) => ({
-            name: record.name,
-          }),
+          onChange: setSelectedRowKeys,
         }}
         columns={columns}
-        dataSource={data}
+        dataSource={applications.map((item) => ({ ...item, key: item.id }))}
       />
     </>
   );

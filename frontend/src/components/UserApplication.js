@@ -6,42 +6,25 @@ import { Row, Form, Input, Button, Typography } from "antd";
 import { config } from "../utils";
 const { Title } = Typography;
 
-const UserProfile = () => {
+const UserApplication = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  useEffect(() => {
-    retrieveUser();
-  }, []);
-  const retrieveUser = async () => {
+  const onFinish = async (body) => {
+    let bodyTrimmed = Object.keys(body)
+      .filter((k) => body[k] != null)
+      .reduce((a, k) => ({ ...a, [k]: body[k] }), {});
     try {
-      let res = await axios.get(
-        (process.env.REACT_APP_BASE_URL || "") + "/api/users/profile",
+      await axios.post(
+        (process.env.REACT_APP_BASE_URL || "") + "/api/applications/",
+        bodyTrimmed,
         config()
       );
-      form.setFieldsValue(res.data);
     } catch (err) {
       if (err.response.status === 401) {
         history.push("/");
       }
       console.log(err);
     }
-  };
-  const onFinish = async (body) => {
-    let bodyTrimmed = Object.keys(body)
-      .filter((k) => body[k] != null)
-      .reduce((a, k) => ({ ...a, [k]: body[k] }), {});
-      try {
-        await axios.put(
-          (process.env.REACT_APP_BASE_URL || "") + "/api/users/profile",
-          bodyTrimmed,
-          config()
-        );
-      } catch (err) {
-        if (err.response.status === 401) {
-          history.push("/");
-        }
-        console.log(err);
-      }
   };
   const formItemLayout = {
     labelCol: {
@@ -113,4 +96,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserApplication;

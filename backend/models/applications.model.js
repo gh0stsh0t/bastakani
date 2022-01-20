@@ -27,6 +27,9 @@ module.exports = (sequelize, Sequelize) => {
     weight: {
       type: Sequelize.INTEGER,
     },
+    approved: {
+      type: Sequelize.BOOLEAN,
+    },
   });
 
   return Application;
