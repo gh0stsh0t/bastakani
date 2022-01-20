@@ -4,14 +4,19 @@ const cors = require("cors");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var bcrypt = require("bcryptjs");
 
-var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var authRouter = require("./routes/auth");
+var applicationsRouter = require("./routes/applications");
 
 var app = express();
-var corsOptions = {
-  origin: "http://localhost:3000",
-};
+
+if (process.env.NODE_ENV !== "production") {
+  var corsOptions = {
+    origin: "http://localhost:3000",
+  };
+}
 
 app.use(cors(corsOptions));
 
@@ -23,11 +28,42 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 const db = require("./models");
-db.sequelize.sync();
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+function initial() {
+  db.role.create({
+    id: 1,
+    name: "user",
+  });
+
+  db.role
+    .create({
+      id: 2,
+      name: "admin",
+    })
+    .then(() => {
+      db.user
+        .create({
+          email: "admin@test.com",
+          password: bcrypt.hashSync("admintest", 8),
+          active: true,
+        })
+        .then((user) => {
+          user.setRoles([2]);
+        });
+    });
+}
+db.sequelize.sync({ force: true }).then(() => {
+  initial();
+});
+if (process.env.NODE_ENV === "production") {
+  app.get("/*", function (req, res) {
+    res.sendFile(path + "index.html");
+  });
+}
+app.use("/api/users", usersRouter);
+app.use("/api/applications", applicationsRouter);
+app.use("/api/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

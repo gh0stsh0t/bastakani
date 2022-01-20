@@ -1,26 +1,50 @@
 import "./App.css";
-import { Layout, Menu, Button, Row, Col, Image, Typography } from "antd";
+import { Layout, Menu } from "antd";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
-import Home from "./pages/home";
+import { Home, Admin, Profile, Apply } from "./pages";
 
-const { Title } = Typography;
-const { Header, Footer } = Layout;
+const { Header } = Layout;
 
 function App() {
   return (
-    <div className="App">
-      <Layout className="layout">
-        <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
-          <div className="logo" />
-          <Menu theme="dark" mode="horizontal">
-            <Menu.Item>Home</Menu.Item>
-            <Menu.Item>Services</Menu.Item>
-            <Menu.Item>Contact</Menu.Item>
-          </Menu>
-        </Header>
-        <Home />
-      </Layout>
-    </div>
+    <Router>
+      <div className="App">
+        <Layout className="layout">
+          <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
+            <div className="logo" />
+            <Menu theme="dark" mode="horizontal">
+              <Menu.Item key="1">
+                <HashLink to="/#home">Home</HashLink>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <HashLink to="/#services">Services</HashLink>
+              </Menu.Item>
+              <Menu.Item key="3">
+                <HashLink to="/#contact">Contact</HashLink>
+              </Menu.Item>
+            </Menu>
+          </Header>
+          <div style={{ marginTop: 70, padding: "0 50px" }}>
+            <Switch>
+              <Route path="/admin">
+                <Admin />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+              <Route path="/apply">
+                <Apply />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </div>
+        </Layout>
+      </div>
+    </Router>
   );
 }
 
