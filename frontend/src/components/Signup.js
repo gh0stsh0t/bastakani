@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Form, Input, Select, Button } from "antd";
+import { Modal, Form, Input, Button } from "antd";
 import axios from "axios";
 
 const Signup = (props) => {
@@ -66,6 +66,42 @@ const Signup = (props) => {
           <Input />
         </Form.Item>
 
+        <Form.Item
+          name="firstName"
+          label="First name"
+          rules={[
+            {
+              required: true,
+              message: "Please input your first name!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="lastName"
+          label="Last name"
+          rules={[
+            {
+              required: true,
+              message: "Please input your last name!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="contactNumber"
+          label="Contact Number"
+          rules={[
+            {
+              required: true,
+              message: "Please input your contact number!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
         <Form.Item
           name="password"
           label="Password"

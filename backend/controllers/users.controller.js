@@ -3,23 +3,50 @@ const User = db.user;
 const Op = db.Sequelize.Op;
 
 exports.update = async (req, res, next) => {
-  const id = req.params.id;
+  const id = req.userId;
   try {
     const num = await User.update(req.body, {
       where: { id: id },
     });
     if (num == 1) {
       res.send({
-        message: "Application was updated successfully.",
+        message: "User was updated successfully.",
       });
     } else {
       res.send({
-        message: `Cannot update Application with id=${id}. Maybe Application was not found or req.body is empty!`,
+        message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
       });
     }
   } catch (err) {
     res.status(500).send({
-      message: "Error updating Application with id=" + id,
+      message: "Error updating User with id=" + id,
+    });
+  }
+};
+
+exports.approveAll = async (req, res, next) => {
+  try {
+    let id = req.body.id;
+    const num = await User.update(
+      { active: true },
+      {
+        where: { id },
+      }
+    );
+    if (num == 1) {
+      res.send({
+        message: "User was updated successfully.",
+      });
+    } else {
+      res.send({
+        message: `Cannot update User with id=${id.join(
+          ", "
+        )}. Maybe User was not found or req.body is empty!`,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: "Error updating User with id=" + id.join(", "),
     });
   }
 };
@@ -50,54 +77,45 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const id = req.userId;
 
-  User.findByPk(id)
+  User.findByPk(id, {
+    attributes: ["email", "firstName", "lastName", "contactNumber"],
+  })
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Application with id=${id}.`,
+          message: `Cannot find User with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Application with id=" + id,
+        message: "Error retrieving User with id=" + id,
       });
     });
 };
 
-exports.delete = async (req, res) => {
-  const id = req.params.id;
-  let application = null;
-
+exports.deleteAll = async (req, res) => {
   try {
-    application = await User.findByPk(id);
+    let id = req.body.id;
+    const num = await User.destroy({ where: { id } });
+    if (num == 1) {
+      res.send({
+        message: "Users deleted successfully.",
+      });
+    } else {
+      res.send({
+        message: `Cannot delete User with id=${id.join(
+          ", "
+        )}. Maybe User was not found or req.body is empty!`,
+      });
+    }
   } catch (err) {
     res.status(500).send({
-      message: "Error retrieving Application with id=" + id,
-    });
-  }
-
-  if (!application) {
-    res.status(404).send({
-      message: `Cannot find Application with id=${id}.`,
-    });
-  }
-
-  try {
-    application.active = false;
-    await application.save();
-    res.send({
-      message: "Application was updated successfully.",
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "Error updating Application with id=" + id,
+      message: "Error deleting User with id=" + id.join(", "),
     });
   }
 };
-
-exports.deleteAll = (req, res) => {};

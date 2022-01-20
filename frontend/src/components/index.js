@@ -4,4 +4,13 @@ import Signup from "./Signup";
 
 import AdminUsers from "./AdminUsers";
 import AdminApplications from "./AdminApplications";
-export { DefaultImage, Signin, Signup, AdminUsers, AdminApplications };
+
+import UserProfile from "./UserProfile";
+export {
+  DefaultImage,
+  Signin,
+  Signup,
+  AdminUsers,
+  AdminApplications,
+  UserProfile,
+};

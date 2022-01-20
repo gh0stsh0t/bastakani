@@ -3,7 +3,7 @@ import { Layout, Menu } from "antd";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 
-import { Home, Admin, Profile, Apply } from "./pages";
+import { Home, Admin, Profile } from "./pages";
 
 const { Header } = Layout;
 
@@ -33,9 +33,6 @@ function App() {
               </Route>
               <Route path="/profile">
                 <Profile />
-              </Route>
-              <Route path="/apply">
-                <Apply />
               </Route>
               <Route path="/">
                 <Home />

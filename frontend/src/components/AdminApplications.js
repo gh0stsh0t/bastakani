@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Row, Col } from "antd";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-import { config } from "../utils/headers";
+import { config } from "../utils";
 
 const AdminApplications = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [applications, setApplications] = useState([]);
   const hasSelected = selectedRowKeys.length > 0;
+  const history = useHistory();
 
   useEffect(() => {
     retrieveUsers();
@@ -21,6 +23,9 @@ const AdminApplications = () => {
       );
       setApplications(res.data);
     } catch (err) {
+      if (err.response.status === 401) {
+        history.push("/");
+      }
       console.log(err);
     }
   };

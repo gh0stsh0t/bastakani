@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Row, Col } from "antd";
 import axios from "axios";
-import { config } from "../utils/headers";
-config;
+import { config } from "../utils";
+import { useHistory } from "react-router-dom";
 
 const AdminUsers = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [users, setUsers] = useState([]);
   const hasSelected = selectedRowKeys.length > 0;
+  const history = useHistory();
 
   useEffect(() => {
     retrieveUsers();
@@ -21,6 +22,9 @@ const AdminUsers = () => {
       );
       setUsers(res.data);
     } catch (err) {
+      if (err.response.status === 401) {
+        history.push("/");
+      }
       console.log(err);
     }
   };

@@ -14,11 +14,11 @@ const Signin = (props) => {
         body
       );
       localStorage.setItem("user", JSON.stringify(res.data));
-      if (res.data.roles.includes("ROLE_ADMIN")) {
-        history.push("/admin");
-      } else {
-        history.push("/profile");
-      }
+      // if (res.data.roles.includes("ROLE_ADMIN")) {
+      //   history.push("/admin");
+      // } else {
+      history.push("/profile");
+      // }
     } catch (err) {
       console.log(err);
     }
